@@ -83,7 +83,6 @@ func doRequest(worker *RequestWorker) error {
 		} else {
 			worker.successCount++
 		}
-
 	}
 
 	return nil

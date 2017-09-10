@@ -29,7 +29,6 @@ var ReportTemplate string = `
  *
  */
 func LogInit() (ok bool) {
-
 	ok = true
 	log_conf := `
 	<seelog type="asynctimer" asyncinterval="1000" minlevel="debug"
@@ -47,6 +46,7 @@ func LogInit() (ok bool) {
 
 	logger, err := seelog.LoggerFromConfigAsBytes([]byte(log_conf))
 	if err != nil {
+		fmt.Printf("LoggerFromConfigAsBytes Error:%s", err.Error())
 		ok = false
 		return
 	}
@@ -149,7 +149,7 @@ func main() {
 
 	cost := endTime.Sub(beginTime).Seconds()
 
-	buffer := bytes.NewBuffer(make([]byte, 2048))
+	buffer := bytes.NewBuffer(make([]byte, 0))
 
 	report, err := template.New("Report").Parse(ReportTemplate)
 
