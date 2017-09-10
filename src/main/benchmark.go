@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"time"
 
 	"sync"
@@ -25,53 +24,12 @@ var ReportTemplate string = `
 	失败次数TPS:{{ .FailedTps | printf "%.3f"}}
 `
 
-/*
- *
- */
-func LogInit() (ok bool) {
-	ok = true
-	log_conf := `
-	<seelog type="asynctimer" asyncinterval="1000" minlevel="debug"
-		maxlevel="error">
-		<outputs formatid="main">
-			<buffered size="10000" flushperiod="1000">
-				<rollingfile type="date" filename="run.log"
-					datepattern="20170113" maxrolls="30"/>
-			</buffered>
-		</outputs>
-		<formats>
-			<format id="main" format="%Time|%LEV|%File|%Line|%Msg%n"/>
-		</formats>
-	</seelog>`
-
-	logger, err := seelog.LoggerFromConfigAsBytes([]byte(log_conf))
-	if err != nil {
-		fmt.Printf("LoggerFromConfigAsBytes Error:%s", err.Error())
-		ok = false
-		return
-	}
-
-	err = seelog.ReplaceLogger(logger)
-	if err != nil {
-		ok = false
-		fmt.Printf("ReplaceLogger Error!%s\n", err.Error())
-		return
-	}
-
-	return
-}
-
 func main() {
 
-	succ := LogInit()
-	if !succ {
-		fmt.Println("Init Log Error,Exit Now!")
-		os.Exit(0)
-	}
-
+	LogInit()
 	defer seelog.Flush()
 
-	seelog.Debugf("Log Init Success!")
+	seelog.Debugf("Benchmark Running...")
 
 	var dataFile, requestUrl string
 	var concurrency, totalCount int
