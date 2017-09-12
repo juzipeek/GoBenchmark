@@ -12,6 +12,8 @@ import (
 
 	"bytes"
 
+	"runtime"
+
 	"github.com/cihub/seelog"
 )
 
@@ -45,6 +47,9 @@ func main() {
 	flag.Parse()
 	seelog.Debugf("param args:[%v][%v][%v][%v][%v]",
 		dataFile, requestUrl, concurrency, totalCount, failContinue)
+
+	// 设置最大进程数为 CPU 数
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	if len(requestUrl) == 0 {
 		flag.Usage()
